@@ -139,7 +139,19 @@ kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'
 ```bash
 minikube service argocd-server -n argocd --url
 ```
+### USO para codespaces''''
 
+
+```bash
+# Frontend (puerto 80 → 8080 en Codespaces)
+kubectl port-forward svc/williams-rosas-front-service 8080:80 --address 0.0.0.0 &
+
+# Backend (puerto 9090 en Codespaces)
+kubectl port-forward svc/williams-rosas-back-service 9090:9090 --address 0.0.0.0 &
+
+# ArgoCD (puerto 443 → 8443 en Codespaces)
+kubectl port-forward svc/argocd-server -n argocd 8443:443 --address 0.0.0.0 &
+```
 ### 20. Obtener la contraseña inicial de ArgoCD
 ```bash
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d && echo
