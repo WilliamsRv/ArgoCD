@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: williams-rosas-front-deployment
+  labels:
+    app: williams-rosas-front
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: williams-rosas-front
+  template:
+    metadata:
+      labels:
+        app: williams-rosas-front
+    spec:
+      containers:
+        - name: williams-rosas-front
+          image: williams31/frontend-action:latest
+          command:
+            - sh
+            - -c
+            - |
+              find /usr/share/nginx/html -type f -name '*.js' -exec sed -i "s|__API_BASE_URL_PLACEHOLDER__|$$API_BASE_URL|g" {} \;
+              exec nginx -g 'daemon off;'
+          ports:
+            - containerPort: 80
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: API_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: williams-rosas-configmap
+                  key: API_BASE_URL
+          envFrom:
+            - secretRef:
+                name: williams-rosas-secret
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10

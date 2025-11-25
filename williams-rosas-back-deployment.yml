@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: williams-rosas-back-deployment
+  labels:
+    app: williams-rosas-back
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: williams-rosas-back
+  template:
+    metadata:
+      labels:
+        app: williams-rosas-back
+    spec:
+      containers:
+        - name: williams-rosas-back
+          image: williams31/ia-assistant-backend:latest
+          ports:
+            - containerPort: 9090
+          env:
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: williams-rosas-configmap
+                  key: SERVER_PORT
+          envFrom:
+            - secretRef:
+                name: williams-rosas-secret
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 9090
+            initialDelaySeconds: 30
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 9090
+            initialDelaySeconds: 10
+            periodSeconds: 10
