@@ -12,6 +12,13 @@
 
 ---
 
+## **Eliminar todo
+```bash
+kubectl delete all --all
+kubectl delete configmap --all
+kubectl delete secret --all
+```
+
 ## **FASE 1: Preparación del Entorno**
 
 ### 1. Iniciar Minikube
