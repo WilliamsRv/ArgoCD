@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: williams-service-portforward
+  namespace: williams-namespace
+  labels:
+    app: crud-app
+    owner: williams
+    type: port-forward
+spec:
+  type: LoadBalancer 
+  ports:
+  - port: 8094
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: crud-app

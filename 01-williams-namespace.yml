@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: williams-namespace
+  labels:
+    name: williams-namespace
+    owner: williams

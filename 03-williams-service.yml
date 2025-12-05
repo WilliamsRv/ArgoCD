@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: williams-service
+  namespace: williams-namespace
+  labels:
+    app: crud-app
+    owner: williams
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 8080
+    nodePort: 30093  
+    protocol: TCP
+    name: http
+  selector:
+    app: crud-app
